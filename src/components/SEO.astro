@@ -1,0 +1,32 @@
+---
+import { siteConfig } from '../config/site.config.js';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string; // e.g. "/blog/my-post"
+}
+
+const { title, description, path = '' } = Astro.props;
+const canonicalURL = new URL(path, siteConfig.url).toString();
+---
+
+<title>{title} | {siteConfig.name}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": siteConfig.name,
+  "url": siteConfig.url,
+})} />

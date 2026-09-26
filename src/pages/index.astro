@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site.config.js';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title={siteConfig.name} description={siteConfig.description} path="/">
+  <h1 class="text-3xl font-bold mb-2">{siteConfig.name}</h1>
+  <p class="text-gray-600 mb-8">{siteConfig.tagline}</p>
+
+  <h2 class="text-xl font-semibold mb-4">Latest posts</h2>
+  <ul class="space-y-4">
+    {posts.map((post) => (
+      <li>
+        <a href={`/blog/${post.slug}`} class="text-lg font-medium hover:underline">
+          {post.data.title}
+        </a>
+        <p class="text-gray-600 text-sm">{post.data.description}</p>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
